@@ -40,10 +40,11 @@ public class OTPModule {
     private PhoneAuthProvider.ForceResendingToken mToken;
     private Button mbtnContinue;
     private FirebaseAuth auth;
+    private String mPhoneNumber;
+    private Activity mActivity;
 
-    public OTPModule(Context context, ProgressBar progressBar, EditText firstField, EditText secondField, EditText thirdField,
-                     EditText forthField, EditText fifthField, EditText sixthField, String verificationId,
-                     PhoneAuthProvider.ForceResendingToken token, Button btnContinue, final Activity activity){
+    public OTPModule(Context context, String phoneNumber, ProgressBar progressBar, EditText firstField, EditText secondField, EditText thirdField,
+                     EditText forthField, EditText fifthField, EditText sixthField, Button btnContinue, Activity activity){
         this.mProgressBar = progressBar;
         this.mVerificationCodeFirstDigitField = firstField;
         this.mVerificationCodeSecondDigitField = secondField;
@@ -52,9 +53,10 @@ public class OTPModule {
         this.mVerificationCodeFifthDigitField = fifthField;
         this.mVerificationCodeSixthDigitField = sixthField;
         this.mContext = context;
-        this.mVerificationId = verificationId;
-        this.mToken = token;
+        this.mPhoneNumber = phoneNumber;
         this.mbtnContinue = btnContinue;
+        this.mActivity = activity;
+
         this.mbtnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +65,7 @@ public class OTPModule {
                         + mVerificationCodeFifthDigitField.getText().toString() + mVerificationCodeSixthDigitField.getText().toString();
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, fullVerificationCode);
                 auth.signInWithCredential(credential)
-                        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
@@ -141,24 +143,23 @@ public class OTPModule {
         }
     };
 
-    public String sendVerificationCode(String mobile, Activity activity) {
+    public void sendVerificationCode() {
         FirebaseApp.initializeApp(mContext);
         auth = FirebaseAuth.getInstance();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                mobile,
+                mPhoneNumber,
                 60,
                 TimeUnit.SECONDS,
-                activity,
+                mActivity,
                 mCallbacks);
-        return mVerificationId;
     }
 
-    public void resendVerificationCode(String phoneNumber, Activity activity) {
+    public void resendVerificationCode() {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,        // Phone number to verify
+                mPhoneNumber,        // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
-                activity,               // Activity (for callback binding)
+                mActivity,               // Activity (for callback binding)
                 mCallbacks,mToken);             // ForceResendingToken from callbacks
     }
 }

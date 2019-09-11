@@ -51,6 +51,7 @@ public class OTPActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private String mAction;
     boolean stateChanged = false;
+    OTPModule module ;
    /* private TextView mTimerText;
     private int minutes = 0;
     private int seconds = 60;*/
@@ -69,29 +70,12 @@ public class OTPActivity extends AppCompatActivity {
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mbtnContinue = (Button) findViewById(R.id.btn_continue);
+        mResendCodeText = (TextView) findViewById(R.id.tv_resendCode);
 
-        mbtnContinue.setOnClickListener(new View.OnClickListener() {
+        mResendCodeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fullVerificationCode = mVerificationCodeFirstDigitField.getText().toString() + mVerificationCodeSecondDigitField.getText().toString()
-                        + mVerificationCodeThirdDigitField.getText().toString() + mVerificationCodeForthDigitField.getText().toString()
-                        + mVerificationCodeFifthDigitField.getText().toString() + mVerificationCodeSixthDigitField.getText().toString();
-                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, fullVerificationCode);
-
-                auth.signInWithCredential(credential)
-                        .addOnCompleteListener(OTPActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressDialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(),"Verification succcessful", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                        Toast.makeText(getApplicationContext(), "Verification Failed", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        });
+                module.resendVerificationCode();
             }
         });
 
@@ -222,12 +206,12 @@ public class OTPActivity extends AppCompatActivity {
             }
         });
 
-        OTPModule module = new OTPModule(this, mProgressBar,mVerificationCodeFirstDigitField,
+        module = new OTPModule(this, "9541862699",mProgressBar,mVerificationCodeFirstDigitField,
                 mVerificationCodeSecondDigitField,mVerificationCodeThirdDigitField,mVerificationCodeForthDigitField,
-                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField,mVerificationId,mToken,
+                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField
                 mbtnContinue,OTPActivity.this);
 
-        mVerificationId = module.sendVerificationCode("7988161798",OTPActivity.this);
+        module.sendVerificationCode();
 
     }
 }
