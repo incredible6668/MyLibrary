@@ -45,6 +45,35 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:176756345296:android:735293e5540ad6f98451d5",
+        "android_client_info": {
+          "package_name": "com.example.atulgoel.nirogaapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176756345296-0qt269k0edv3k6l7lv71lvmp6358g5b7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkYTR1CV-7b4MpfZgqwZWdPbi2NHyShGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176756345296-0qt269k0edv3k6l7lv71lvmp6358g5b7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:176756345296:android:b565ba78806dd6678451d5",
         "android_client_info": {
           "package_name": "com.example.myandroidlibrary"

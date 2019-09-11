@@ -3,6 +3,7 @@ package com.example.myandroidlibrary;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -11,9 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -21,7 +26,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 
-public class OTPModule{
+public class OTPModule {
 
     private ProgressBar mProgressBar;
     private EditText mVerificationCodeFirstDigitField;
@@ -33,9 +38,12 @@ public class OTPModule{
     private Context mContext;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mToken;
+    private Button mbtnContinue;
+    private FirebaseAuth auth;
 
     public OTPModule(Context context, ProgressBar progressBar, EditText firstField, EditText secondField, EditText thirdField,
-                     EditText forthField, EditText fifthField, EditText sixthField, String verificationId, PhoneAuthProvider.ForceResendingToken token){
+                     EditText forthField, EditText fifthField, EditText sixthField, String verificationId,
+                     PhoneAuthProvider.ForceResendingToken token, Button btnContinue, final Activity activity){
         this.mProgressBar = progressBar;
         this.mVerificationCodeFirstDigitField = firstField;
         this.mVerificationCodeSecondDigitField = secondField;
@@ -46,7 +54,32 @@ public class OTPModule{
         this.mContext = context;
         this.mVerificationId = verificationId;
         this.mToken = token;
+        this.mbtnContinue = btnContinue;
+        this.mbtnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fullVerificationCode = mVerificationCodeFirstDigitField.getText().toString() + mVerificationCodeSecondDigitField.getText().toString()
+                        + mVerificationCodeThirdDigitField.getText().toString() + mVerificationCodeForthDigitField.getText().toString()
+                        + mVerificationCodeFifthDigitField.getText().toString() + mVerificationCodeSixthDigitField.getText().toString();
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, fullVerificationCode);
+                auth.signInWithCredential(credential)
+                        .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(mContext,"Verification succcessful", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                        Toast.makeText(mContext, "Verification Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
     }
+
+
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -110,6 +143,7 @@ public class OTPModule{
 
     public String sendVerificationCode(String mobile, Activity activity) {
         FirebaseApp.initializeApp(mContext);
+        auth = FirebaseAuth.getInstance();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 mobile,
                 60,

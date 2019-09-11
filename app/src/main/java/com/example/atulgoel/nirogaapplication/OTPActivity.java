@@ -68,6 +68,32 @@ public class OTPActivity extends AppCompatActivity {
         mVerificationCodeSixthDigitField = (EditText) findViewById(R.id.et_verificationCodeSixthDigit);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
+        mbtnContinue = (Button) findViewById(R.id.btn_continue);
+
+        mbtnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fullVerificationCode = mVerificationCodeFirstDigitField.getText().toString() + mVerificationCodeSecondDigitField.getText().toString()
+                        + mVerificationCodeThirdDigitField.getText().toString() + mVerificationCodeForthDigitField.getText().toString()
+                        + mVerificationCodeFifthDigitField.getText().toString() + mVerificationCodeSixthDigitField.getText().toString();
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, fullVerificationCode);
+
+                auth.signInWithCredential(credential)
+                        .addOnCompleteListener(OTPActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                progressDialog.dismiss();
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(),"Verification succcessful", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                        Toast.makeText(getApplicationContext(), "Verification Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
 
         // mTimerText = (TextView) findViewById(R.id.tv_timer);
 
@@ -198,9 +224,10 @@ public class OTPActivity extends AppCompatActivity {
 
         OTPModule module = new OTPModule(this, mProgressBar,mVerificationCodeFirstDigitField,
                 mVerificationCodeSecondDigitField,mVerificationCodeThirdDigitField,mVerificationCodeForthDigitField,
-                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField,mVerificationId,mToken);
+                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField,mVerificationId,mToken,
+                mbtnContinue,OTPActivity.this);
 
-        module.sendVerificationCode("7988161798",OTPActivity.this);
+        mVerificationId = module.sendVerificationCode("7988161798",OTPActivity.this);
 
     }
 }
