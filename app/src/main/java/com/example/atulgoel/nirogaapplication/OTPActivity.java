@@ -208,7 +208,7 @@ public class OTPActivity extends AppCompatActivity {
 
         module = new OTPModule(this, "9541862699",mProgressBar,mVerificationCodeFirstDigitField,
                 mVerificationCodeSecondDigitField,mVerificationCodeThirdDigitField,mVerificationCodeForthDigitField,
-                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField
+                mVerificationCodeFifthDigitField,mVerificationCodeSixthDigitField,
                 mbtnContinue,OTPActivity.this);
 
         module.sendVerificationCode();
