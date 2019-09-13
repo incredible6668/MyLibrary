@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 public class UI {
 
-    private void showProgress(Context context){
+    public void showProgress(Context context){
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Please Wait while loading...");
@@ -17,4 +17,6 @@ public class UI {
     public void showToast(Context context,String message){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
+
+
 }
