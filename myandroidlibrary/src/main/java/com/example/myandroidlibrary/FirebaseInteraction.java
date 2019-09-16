@@ -12,34 +12,27 @@ import java.util.ArrayList;
 public class FirebaseInteraction {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mOptionsReference;
-    private ArrayList<String> mOptions;
 
     public FirebaseInteraction(){
             mDatabase = FirebaseDatabase.getInstance();
     }
 
-    public ArrayList<String> getOptionsList(String dbName, String tableName, String keyName){
+    void getOptionsList(final ArrayList<String> mOptions, String dbName, String tableName, String keyName){
         mOptionsReference = mDatabase.getReference(dbName)
                 .child(tableName)
                 .child(keyName);
-        mOptionsReference.addValueEventListener(optionsListener);
-        while(mOptions == null){
-        }
-        return mOptions;
-    }
-
-    ValueEventListener optionsListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            mOptions = new ArrayList<>();
-            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                mOptions.add(postSnapshot.getValue().toString());
+        mOptionsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mOptions.add(postSnapshot.getValue().toString());
+                }
             }
-        }
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        }
-    };
+            }
+        });
+    }
 }

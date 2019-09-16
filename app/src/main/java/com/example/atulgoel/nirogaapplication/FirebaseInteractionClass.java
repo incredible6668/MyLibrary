@@ -29,7 +29,7 @@ public class FirebaseInteractionClass extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FirebaseInteraction firebaseResults = new FirebaseInteraction();
         mOptions = new ArrayList<>();
-        mOptions = firebaseResults.getOptionsList("QuestionsData","second","options");
+        firebaseResults.getOptionsList(mOptions,"QuestionsData","second","options");
        // Toast.makeText(this,mOptions.size(),Toast.LENGTH_SHORT).show();
     }
 }
