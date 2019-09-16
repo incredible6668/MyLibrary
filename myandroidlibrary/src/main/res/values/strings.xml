@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyAndroidLibrary</string>
+
+    <string name="invaild_mobile_no">Invalid mobile number.</string>
+    <string name="sms_quota_exceeded">SMS Quota exceeded.</string>
+    <string name="please_check_your_internet_connection_text">Please check your internet connection.</string>
+    <string name="code_sent">Code sent</string>
+</resources>
