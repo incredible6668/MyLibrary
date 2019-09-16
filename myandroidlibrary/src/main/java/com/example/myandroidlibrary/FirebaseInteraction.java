@@ -17,7 +17,7 @@ public class FirebaseInteraction {
             mDatabase = FirebaseDatabase.getInstance();
     }
 
-    void getOptionsList(final ArrayList<String> mOptions, String dbName, String tableName, String keyName){
+    public void getOptionsList(final ArrayList<String> mOptions, String dbName, String tableName, String keyName){
         mOptionsReference = mDatabase.getReference(dbName)
                 .child(tableName)
                 .child(keyName);
