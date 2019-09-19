@@ -30,7 +30,7 @@ public class FirebaseInteraction {
                     }
                 }
             }
-        }, 1000);
+        }, 3000);
     }
 
     public void addOptionsToList(String dbName, String tableName, String keyName){
